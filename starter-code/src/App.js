@@ -1,18 +1,44 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
 import './App.css';
+import 'bulma/css/bulma.css';
+import food from './foods.json';
+import FoodBox from './components/FoodBox/FoodBox';
+import Input from './components/Input/Input';
 
 class App extends Component {
+
+  state = {
+    list: food
+  }
+
+  handlerSearch = (e) => {
+    this.setState({
+      ...this.state,
+      list: food.filter(elem => elem.name.toLowerCase().includes(e.target.value.toLowerCase()))
+    })
+  }
+
+  handlerInput=(e)=>{
+    let newState={
+      ...this.state
+    }
+    debugger
+    newState.list[e.target.attributes.idx.value].quantity=+e.target.value
+    this.setState(newState)
+  }
+
+
   render() {
     return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h1 className="App-title">Welcome to React</h1>
-        </header>
-        <p className="App-intro">
-          To get started, edit <code>src/App.js</code> and save to reload.
-        </p>
+      <div className='App'>
+
+      <h1>IronNutrition</h1> 
+
+        <Input placeholder="Search"  function={this.handlerSearch}/>
+
+        <div className="box" > 
+        {this.state.list.map((e,idx)=><FoodBox {...e} idx={idx} key={idx} function={this.handlerInput}/>)}
+        </div>
       </div>
     );
   }
